@@ -3,7 +3,6 @@ package notion
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/url"
 
@@ -57,8 +56,6 @@ func (c *Client) request(ctx context.Context, method, path string, body interfac
 		return nil, err
 	}
 	
-	fmt.Println(string(bodyJson))
-	fmt.Println(requestUrl, c.token, c.version, method)
 	req, err := http.NewRequest(method, requestUrl, bytes.NewBuffer(bodyJson))
 	if err != nil {
 		return nil, err
