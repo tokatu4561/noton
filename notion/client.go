@@ -14,6 +14,11 @@ const (
 	version = "2022-06-28"
 )
 
+type ClientInterface interface {
+	getPageId() string
+	request(ctx context.Context, method, path string, body interface{}) (*http.Response, error)
+}
+
 type Client struct {
 	httpClient  *http.Client
 	baseUrl     *url.URL
@@ -45,6 +50,11 @@ func NewClient() *Client {
 	}
 
 	return c
+}
+
+// getPageId returns the page id.
+func (c *Client) getPageId() string {
+	return c.page
 }
 
 // request sends a request to the Notion API and returns the response.

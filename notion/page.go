@@ -56,13 +56,23 @@ type AppendBlockParams struct {
 	Children []any `json:"children"`
 }
 
-func AppendBlock(params AppendBlockParams) (result *AppendBlockResponse, err error) {
+type PageClient struct {
+	client *ClientInterface
+}
+
+func NewPageClient(client ClientInterface) *PageClient {
+	return &PageClient{
+		client: &client,
+	}
+}
+
+func (pc *PageClient) AppendBlock(params AppendBlockParams) (result *AppendBlockResponse, err error) {
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
 	
-	client := NewClient()
-	requestPath := fmt.Sprintf("/blocks/%s/children", client.page)
+	client := *pc.client
+	requestPath := fmt.Sprintf("/blocks/%s/children", client.getPageId())
 	requestBody := params
 	
 	res, err := client.request(ctx, http.MethodPatch, requestPath, requestBody)
@@ -89,8 +99,8 @@ func AppendBlock(params AppendBlockParams) (result *AppendBlockResponse, err err
 }
 
 type AppendBlockResponse struct {
-	Object  string `json:"object"`
-	Results []Block    `json:"results"`
+	Object  string 	 `json:"object"`
+	Results []any    `json:"results"` // FIXME: any
 }
 
 type ErrorResponse struct {

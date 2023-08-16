@@ -41,7 +41,10 @@ var appendCmd = &cobra.Command{
 			},
 		}
 
-		result, err := notion.AppendBlock(params)
+
+		client := notion.NewClient()
+		pageClient := notion.NewPageClient(client)
+		result, err := pageClient.AppendBlock(params)
 		if err != nil {
 			panic(err)
 		}
